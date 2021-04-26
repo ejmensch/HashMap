@@ -1,4 +1,4 @@
-//Bryce Leslie
+//Bryce Leslie Ethan Mensch
 
 #include "hashMap.hpp"
 #include <iostream>
@@ -32,17 +32,21 @@ hashNode::hashNode(string s, string v){
 void hashNode::addValue(string v) {
 	// adding a value to the end of the value array associated
 	// with a key
+	if(currSize>=valuesSize) {
+		dblArray();
+	}
 	values[currSize] = v;
 	currSize += 1;
 	return;
 	//check for if double needs to be run?
+	// Added above
 }
 void hashNode::dblArray() {
-	// when the value array gets full, you need to make a new 
-	// array twice the size of the old one (just double, no 
-	//going to next prime) and then copy over the old values 
-	//to the new values, then de-allocate the old array.  
-	//Again, just copying over, no hash functiosn involved 
+	// when the value array gets full, you need to make a new
+	// array twice the size of the old one (just double, no
+	//going to next prime) and then copy over the old values
+	//to the new values, then de-allocate the old array.
+	//Again, just copying over, no hash functiosn involved
 	//here.
 	int newsize = 2 * valuesSize; //make new parameters of array
 	string *dblarray = new string[newsize];
@@ -54,13 +58,14 @@ void hashNode::dblArray() {
 	valuesSize=newsize;
 	return;
 	//pretty sure donee
+	//spell done right next time - Bruce
 }
 
 string hashNode::getRandValue() {
-	//Every key has a values array - an array of words that 
-	// follow that key in the text document.  You're going to 
-	//randomly select one of those words and return it.  That 
-	//will be the word that follows your key in your output 
+	//Every key has a values array - an array of words that
+	// follow that key in the text document.  You're going to
+	//randomly select one of those words and return it.  That
+	//will be the word that follows your key in your output
 	//function, and it will also be the next key.
 	int randomvalue = rand()%currSize;
 	string value = values[randomvalue];
