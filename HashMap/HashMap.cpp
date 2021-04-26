@@ -7,6 +7,7 @@
 using namespace std;
 
 // Nothing returns right now, but I think it's just because every function in here needs to be written
+// I'm adding this line so I can push now
 
 hashMap::hashMap(bool hash1, bool coll1) {
 	map = new hashNode*[mapSize];
