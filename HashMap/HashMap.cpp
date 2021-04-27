@@ -6,7 +6,6 @@
 #include <math.h>
 using namespace std;
 
-// Nothing returns right now, but I think it's just because every function in here needs to be written
 
 hashMap::hashMap(bool hash1, bool coll1) {
 	map = new hashNode*[mapSize];
