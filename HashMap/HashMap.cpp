@@ -40,14 +40,14 @@ void hashMap::addKeyValue(string k, string v) {
 			ind = coll2(calcHash2(k),getIndex(k),k);
 		}
 	}
-	int load = numKeys/mapSize; // did I do this right?
+	int load = numKeys/mapSize; // did I do this right?   ~What if a fraction and not a whole nummber?-E
 	if (load>=0.7) { // call rehash if load is over 70%
 		reHash();
 	}
 	// done I think if load is correct
 }
 int hashMap::getIndex(string k) {
-	// What does reHash need to be called for and where does it go?
+	// What does reHash need to be called for and where does it go?  ~Check if it needs to be rehashed?-E
 	if (hashfn==true) {
 		// think we call calcHash1 but want to get that function before we try this
 	}
@@ -57,10 +57,19 @@ int hashMap::getIndex(string k) {
 }
 
 int hashMap::calcHash2(string k) {
-	// don't really know how to start this
+	//divide ascii by incremeenting number for each run through loop?
+
 }
 int hashMap::calcHash1(string k) {
-	// same as calcHash2
+	//take every other letter of a string
+	int len = k.length();
+	unsigned long int hsh = 0;
+	for (int i =0 ; i <= len-1 ; i+=2){
+		hsh = ((int)k[i] + hsh) % len;
+	}
+	return hsh;
+	//maybe done?
+	//probably add a check if the string is odd or even
 }
 void hashMap::getClosestPrime() {
 	// confused how to start this one
