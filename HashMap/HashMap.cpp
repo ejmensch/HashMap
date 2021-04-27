@@ -40,11 +40,12 @@ void hashMap::addKeyValue(string k, string v) {
 			ind = coll2(calcHash2(k),getIndex(k),k);
 		}
 	}
-	int load = numKeys/mapSize; // did I do this right?   ~What if a fraction and not a whole nummber?-E
+	float load = numKeys/mapSize; // did I do this right?   ~What if a fraction and not a whole nummber?-E
 	if (load>=0.7) { // call rehash if load is over 70%
 		reHash();
 	}
 	// done I think if load is correct
+	//changed load to a float so it can handle fractions and such - E
 }
 int hashMap::getIndex(string k) {
 	// What does reHash need to be called for and where does it go?  ~Check if it needs to be rehashed?-E
@@ -57,17 +58,56 @@ int hashMap::getIndex(string k) {
 }
 
 int hashMap::calcHash2(string k) {
-	//divide ascii by incremeenting number for each run through loop?
-
+	//rolling hash
+	//https://cp-algorithms.com/string/string-hashing.html
+	int len = k.length();
+	unsigned long int hash = 0;
+	int i;
+	int p = 53;
+	int power = 1;
+	for(i = 0; i<len ; i++){
+		hash = (hash + (k[i] - 'a' + 1) * power) % mapSize;
+		power = (power * p) % mapSize;
+	}
+	return hash;
 }
 int hashMap::calcHash1(string k) {
-	//take every other letter of a string
+	//odd even differentiation
 	int len = k.length();
-	unsigned long int hsh = 0;
-	for (int i =0 ; i <= len-1 ; i+=2){
-		hsh = ((int)k[i] + hsh) % len;
+	unsigned long int hash = 0;
+	int i;
+	if(len%2 == 0){   //even
+		for(i=0; i<len;i++){
+			hash = ((int)k[i] + 11*hash) % len; //instead of len here we need the array size of the data so mapSize? Bryce can you ask about this tomorrow?
+			//hsh = ((int)k[i] + 11*hsh) % mapSize;
+		}
 	}
-	return hsh;
+	else {
+		for (i = 0; i < len; i++) {
+			hash = ((int)k[i] + 37 * hash) % len;
+//			hsh = ((int)k[i] + 37 * hsh) % mapSize;
+		}
+	}
+	return hash;
+
+//this was an attemp to do every other letter, might come back to it later
+//	int len = k.length();
+//	unsigned long int hsh = 0;
+//	int i;
+//	if (len<4){
+//		for( i = 0; i< len ; i++){
+//			hsh = ((int)k[i] + 7*hsh) % len;
+//		}
+//	}
+//	else if(len%2 == 0){
+//		for(i)
+//	}
+//	else {
+//		for (i = 0; i < len - 1; i += 2) {
+//			hsh = ((int) k[i] + hsh) % len;
+//		}
+//	}
+//	return hsh;
 	//maybe done?
 	//probably add a check if the string is odd or even
 }
