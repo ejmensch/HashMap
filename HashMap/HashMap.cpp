@@ -7,7 +7,6 @@
 using namespace std;
 
 // Nothing returns right now, but I think it's just because every function in here needs to be written
-// I'm adding this line so I can push now
 
 hashMap::hashMap(bool hash1, bool coll1) {
 	map = new hashNode*[mapSize];
@@ -35,53 +34,85 @@ void hashMap::addKeyValue(string k, string v) {
 	}
 	else if (map[ind]->keyword!=k) { // calculate new hash index
 		hashcoll++;
-		if (hashfn==true) {
+		if (collfn==true) {
 			ind = coll1(calcHash1(k),getIndex(k),k);
 		}
 		else {
 			ind = coll2(calcHash2(k),getIndex(k),k);
 		}
 	}
-	double load = (double)numKeys/double(mapSize);
+	int load = numKeys/mapSize; // did I do this right?
 	if (load>=0.7) { // call rehash if load is over 70%
 		reHash();
 	}
+	// done I think if load is correct
 }
 int hashMap::getIndex(string k) {
+	// What does reHash need to be called for and where does it go?
+	if (hashfn==true) {
+		// think we call calcHash1 but want to get that function before we try this
+	}
+	else{
+		// think we call calcHash2 but want to get that function before we try this
+	}
 }
 
-int hashMap::calcHash2(string k){
+int hashMap::calcHash2(string k) {
+	// don't really know how to start this
 }
-int hashMap::calcHash1(string k){
+int hashMap::calcHash1(string k) {
+	// same as calcHash2
 }
 void hashMap::getClosestPrime() {
+	// confused how to start this one
+	// Understand what is being asked but don't know how to approach it
 }
 void hashMap::reHash() {
-	int newsize=2*mapSize; // double array size
-	mapSize=newsize;
+	int newMapSize=2*mapSize; // double array size
+	mapSize=newMapSize;
 	hashNode **prevmap=map;
-	for (int i=0;i<mapSize/2;i++){ //update each node in the new map
+	for (int i=0;i<mapSize/2;i++){
 		if (prevmap[i]!=NULL) {
-			if (hashfn==true) {
+			if (hashfn==true) { //update each node in the new map
 				int ind=calcHash1(prevmap[i]->keyword);
 				map[ind]=prevmap[i];
 			}
-			else {
+			else { //update each node in the new map
 				int ind=calcHash2(prevmap[i]->keyword);
 				map[ind]=prevmap[i];
 			}
 		}
 	}
-	delete[] prevmap;
+	delete[] prevmap; // deletes previous map once the new map is filled
 	return;
 	// I think this should be done
 }
 int hashMap::coll1(int h, int i, string k) {
+	// don't really know how to start this
 }
 int hashMap::coll2(int h, int i, string k) {
+	// same as coll1
 }
 int hashMap::findKey(string k) {
 //NOTE: THIS METHOD CANNOT LOOP from index 0 to end of hash array looking for the key.  That destroys any efficiency in run-time.
+	if (hashfn==true) {
+		int ind = calcHash1(k);
+		if (k==map[ind]->keyword) {
+			return ind;
+			// return index if the keyword matches the string
+		}
+	}
+	// Need to add collision functions 1 and 2 to search for key in array
+	// Want to wait to try this until we get coll1 and coll2
+	if (hashfn==false) {
+		int ind = calcHash2(k);
+		if (k==map[ind]->keyword) {
+			return ind;
+			// return index if the keyword matches the string
+		}
+	}
+	// Need to add collision functions 1 and 2 to search for key in array
+	// Want to wait to try this until we get coll1 and coll2
 }
 
 
