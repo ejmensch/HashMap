@@ -137,9 +137,29 @@ void hashMap::reHash() {
 }
 int hashMap::coll1(int h, int i, string k) {
 	// don't really know how to start this
+	//gonna need to know what these parameters are supposed to mean, my guess is h is the hash number but idk what i would be
+	//after looking more h= hash number i= intex k = string ? Probably ask TA
+
+//	//quadratic probing
+//	//need to find a way to check if the value of the index is equal to the string, buz belo line gives error
+//	//if (map[i] != k) { //if the value at the index isnt the string that were trying to insert, find a new index that is empty
+//		for (int j = 0; j < mapSize; j++) {
+//			int t = (h + j * j) % mapSize;
+//			if (map[t] == NULL) {	//if the index is empty
+//				h=t;
+//			}
+//		}
+//	}
+//return h;
 }
 int hashMap::coll2(int h, int i, string k) {
 	// same as coll1
+	// double hashing
+//	if (map[i] != k){ //need help on with the test for collision line
+//
+//		h = calcHash1(k) + calcHash2(k);
+//	}
+//  this needs some work
 }
 int hashMap::findKey(string k) {
 //NOTE: THIS METHOD CANNOT LOOP from index 0 to end of hash array looking for the key.  That destroys any efficiency in run-time.
