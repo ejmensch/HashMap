@@ -135,14 +135,14 @@ int hashMap::calcHash1(string k) {
 	unsigned long int hash = 0;
 	if(len%2 == 0){   //even
 		for(int i=0; i<len;i++){
-			hash = ((int)k[i] + 11*hash) % len; //instead of len here we need the array size of the data so mapSize? Bryce can you ask about this tomorrow?
-			//hsh = ((int)k[i] + 11*hsh) % mapSize;
+			//hash = ((int)k[i] + 11*hash) % len; //instead of len here we need the array size of the data so mapSize? Bryce can you ask about this tomorrow?
+			hash = ((int)k[i] + 11*hash) % mapSize;
 		}
 	}
 	else {
 		for (int i = 0; i < len; i++) {
-			hash = ((int)k[i] + 37 * hash) % len;
-//			hsh = ((int)k[i] + 37 * hsh) % mapSize;
+			//hash = ((int)k[i] + 37 * hash) % len;
+			hash = ((int)k[i] + 37 * hash) % mapSize;
 		}
 	}
 	return hash;
