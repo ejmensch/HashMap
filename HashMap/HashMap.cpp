@@ -6,11 +6,24 @@
 #include <math.h>
 using namespace std;
 
+/* Functions:
+ * hashMap - think good
+ * addKeyValue - think good, but still unsure
+ * getIndex - think good
+ * calcHash1 - think good
+ * calcHash2 - think good
+ * getClosestPrime - not started
+ * reHash - needs work
+ * coll1 - think good
+ * coll2 - needs work
+ * findKey - not sure
+ * printMap - given
+ */
 
 hashMap::hashMap(bool hash1, bool coll1) {
-	map = new hashNode*[mapSize];
 	first = "";
 	mapSize = 500; // states 500 in code instructions
+	map = new hashNode*[mapSize];
 	numKeys = 0;
 	for (int i=0;i<mapSize;i++) {
 		map[i] = NULL; // values set to NULL in the map
@@ -23,6 +36,7 @@ hashMap::hashMap(bool hash1, bool coll1) {
 }
 void hashMap::addKeyValue(string k, string v) {
 	int ind = getIndex(k);
+	cout << k << " ";
 	if (map[ind]==NULL) { //adds a node at each null value
 		map[ind]=new hashNode(k,v);
 		numKeys++;
@@ -34,27 +48,72 @@ void hashMap::addKeyValue(string k, string v) {
 	else if (map[ind]->keyword!=k) { // calculate new hash index
 		hashcoll++;
 		if (collfn==true) {
-			ind = coll1(calcHash1(k),getIndex(k),k);
+			if (hashfn==true) {
+				ind = coll1(calcHash1(k),getIndex(k),k);
+				if (map[ind]==NULL) {
+					map[ind] = new hashNode(k,v);
+					numKeys++;
+				}
+				else if (map[ind]->keyword==k) {
+					map[ind]->addValue(v);
+				}
+			}
+			else {
+				ind = coll1(calcHash2(k),getIndex(k),k);
+				if (map[ind]==NULL) {
+					map[ind] = new hashNode(k,v);
+					numKeys++;
+				}
+				else if (map[ind]->keyword==k) {
+					map[ind]->addValue(v);
+				}
+			}
 		}
 		else {
-			ind = coll2(calcHash2(k),getIndex(k),k);
+			if (hashfn==true) {
+				ind = coll2(calcHash1(k),getIndex(k),k);
+				if (map[ind]==NULL) {
+					map[ind] = new hashNode(k,v);
+					numKeys++;
+				}
+				else if (map[ind]->keyword==k) {
+					map[ind]->addValue(v);
+				}
+			}
+			else {
+				ind = coll2(calcHash2(k),getIndex(k),k);
+				if (map[ind]==NULL) {
+					map[ind] = new hashNode(k,v);
+					numKeys++;
+				}
+				else if (map[ind]->keyword==k) {
+					map[ind]->addValue(v);
+				}
+			}
 		}
 	}
-	float load = numKeys/mapSize; // did I do this right?   ~What if a fraction and not a whole nummber?-E
-	if (load>=0.7) { // call rehash if load is over 70%
+
+	float load = numKeys/mapSize;
+	if (load>=0.7) {
 		reHash();
 	}
-	// done I think if load is correct
-	//changed load to a float so it can handle fractions and such - E
 }
 int hashMap::getIndex(string k) {
-	// What does reHash need to be called for and where does it go?  ~Check if it needs to be rehashed?-E
+	float load = numKeys/mapSize;
+	if (load>=0.7) {
+		reHash();
+	}
+	int ind;
 	if (hashfn==true) {
-		// think we call calcHash1 but want to get that function before we try this
+		ind = calcHash1(k)%mapSize;
 	}
-	else{
-		// think we call calcHash2 but want to get that function before we try this
+	else if (hashfn==false) {
+		ind = calcHash2(k)%mapSize;
 	}
+	else {
+		ind = -1;
+	}
+	return ind;
 }
 
 int hashMap::calcHash2(string k) {
@@ -62,10 +121,9 @@ int hashMap::calcHash2(string k) {
 	//https://cp-algorithms.com/string/string-hashing.html
 	int len = k.length();
 	unsigned long int hash = 0;
-	int i;
 	int p = 53;
 	int power = 1;
-	for(i = 0; i<len ; i++){
+	for(int i = 0; i<len ; i++){
 		hash = (hash + (k[i] - 'a' + 1) * power) % mapSize;
 		power = (power * p) % mapSize;
 	}
@@ -75,15 +133,14 @@ int hashMap::calcHash1(string k) {
 	//odd even differentiation
 	int len = k.length();
 	unsigned long int hash = 0;
-	int i;
 	if(len%2 == 0){   //even
-		for(i=0; i<len;i++){
+		for(int i=0; i<len;i++){
 			hash = ((int)k[i] + 11*hash) % len; //instead of len here we need the array size of the data so mapSize? Bryce can you ask about this tomorrow?
 			//hsh = ((int)k[i] + 11*hsh) % mapSize;
 		}
 	}
 	else {
-		for (i = 0; i < len; i++) {
+		for (int i = 0; i < len; i++) {
 			hash = ((int)k[i] + 37 * hash) % len;
 //			hsh = ((int)k[i] + 37 * hsh) % mapSize;
 		}
@@ -118,42 +175,31 @@ void hashMap::getClosestPrime() {
 void hashMap::reHash() {
 	int newMapSize=2*mapSize; // double array size
 	mapSize=newMapSize;
-	hashNode **prevmap=map;
+	hashNode **flipmap=map;
 	for (int i=0;i<mapSize/2;i++){
-		if (prevmap[i]!=NULL) {
+		if (flipmap[i]!=NULL) {
 			if (hashfn==true) { //update each node in the new map
-				int ind=calcHash1(prevmap[i]->keyword);
-				map[ind]=prevmap[i];
+				int ind=calcHash1(flipmap[i]->keyword);
+				map[ind]=flipmap[i];
 			}
 			else { //update each node in the new map
-				int ind=calcHash2(prevmap[i]->keyword);
-				map[ind]=prevmap[i];
+				int ind=calcHash2(flipmap[i]->keyword);
+				map[ind]=flipmap[i];
 			}
 		}
 	}
-	delete[] prevmap; // deletes previous map once the new map is filled
-	return;
-	// I think this should be done
+	delete[] flipmap; // deletes previous map once the new map is filled
 }
 int hashMap::coll1(int h, int i, string k) {
-	// don't really know how to start this
-	//gonna need to know what these parameters are supposed to mean, my guess is h is the hash number but idk what i would be
-	//after looking more h= hash number i= intex k = string ? Probably ask TA
-
-//	//quadratic probing
-//	//need to find a way to check if the value of the index is equal to the string, buz belo line gives error
-//	//if (map[i] != k) { //if the value at the index isnt the string that were trying to insert, find a new index that is empty
-//		for (int j = 0; j < mapSize; j++) {
-//			int t = (h + j * j) % mapSize;
-//			if (map[t] == NULL) {	//if the index is empty
-//				h=t;
-//			}
-//		}
-//	}
-//return h;
+	//quadratic probing
+	for (int j = 0; map[h%mapSize] != NULL && map[h%mapSize]->keyword != k; j++) {
+		h = (h+(j * j))%mapSize;
+		collisions++;
+	}
+	collisions--;
+	return h;
 }
 int hashMap::coll2(int h, int i, string k) {
-	// same as coll1
 	// double hashing
 //	if (map[i] != k){ //need help on with the test for collision line
 //
@@ -163,24 +209,62 @@ int hashMap::coll2(int h, int i, string k) {
 }
 int hashMap::findKey(string k) {
 //NOTE: THIS METHOD CANNOT LOOP from index 0 to end of hash array looking for the key.  That destroys any efficiency in run-time.
+	int ind = getIndex(k);
 	if (hashfn==true) {
-		int ind = calcHash1(k);
-		if (k==map[ind]->keyword) {
+		ind = calcHash1(k);
+		if (map[ind]->keyword==k) {
 			return ind;
-			// return index if the keyword matches the string
+		}
+		else if (collfn==true) {
+			ind = coll1(calcHash1(k),getIndex(k),k);
+			if (map[ind]->keyword==k){
+				return ind;
+			}
+			else {
+				return -1;
+			}
+		}
+		else if(collfn==false) {
+			ind = coll2(calcHash1(k),getIndex(k),k);
+			if (map[ind]->keyword==k) {
+				return ind;
+			}
+			else {
+				return -1;
+			}
+		}
+		else {
+			return -1;
 		}
 	}
-	// Need to add collision functions 1 and 2 to search for key in array
-	// Want to wait to try this until we get coll1 and coll2
 	if (hashfn==false) {
-		int ind = calcHash2(k);
-		if (k==map[ind]->keyword) {
+		ind = calcHash2(k);
+		if (map[ind]->keyword==k) {
 			return ind;
-			// return index if the keyword matches the string
+		}
+		else if (collfn==true) {
+			ind = coll1(calcHash2(k),getIndex(k),k);
+			if(map[ind]->keyword==k){
+				return ind;
+			}
+			else {
+				return -1;
+			}
+		}
+		else if(collfn==false) {
+			ind = coll2(calcHash2(k),getIndex(k),k);
+			if(map[ind]->keyword==k) {
+				return ind;
+			}
+			else {
+				return -1;
+			}
+		}
+		else {
+			return -1;
 		}
 	}
-	// Need to add collision functions 1 and 2 to search for key in array
-	// Want to wait to try this until we get coll1 and coll2
+	return -1;
 }
 
 
@@ -197,6 +281,3 @@ void hashMap::printMap() {
 		}
 	}
 }
-
-
-
