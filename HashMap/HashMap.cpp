@@ -171,6 +171,34 @@ int hashMap::calcHash1(string k) {
 void hashMap::getClosestPrime() {
 	// confused how to start this one
 	// Understand what is being asked but don't know how to approach it
+	int primes []= {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137};
+	int len = sizeof(primes)/sizeof(primes[0]); //high
+	int middle = (len)/2; //if it doesnt work just hard code a variable for the length and change that
+	int low = 0;
+	int newMapSize = 2*mapSize;
+	for(int i = 0 ; i< len; i++){
+		if (newMapSize == primes[middle]){
+			mapSize = primes[middle];
+		}
+		else if (newMapSize > primes[middle]){
+			//set new middle using boundaries
+			low = middle;
+			middle = (len - middle)/2 + middle;
+
+		}
+		else if (newMapSize < primes[middle]){
+			len = middle;
+			middle = (low + middle)/2 +low;
+		}
+		//once you hit the same middle twice, break , check prime at value , if its less than mapSize - go up , if greater than, youre good - set new map size
+	}
+	// checck greater than or less than here- outside of loop
+	if (newMapSize > primes[middle]){
+		mapSize = primes[middle+1];
+	}
+	else{
+		mapSize = primes[middle];
+	}
 }
 void hashMap::reHash() {
 	int newMapSize=2*mapSize; // double array size
