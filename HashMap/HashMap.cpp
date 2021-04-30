@@ -12,10 +12,10 @@ using namespace std;
  * getIndex - think good
  * calcHash1 - think good
  * calcHash2 - think good
- * getClosestPrime - not started
+ * getClosestPrime - think done
  * reHash - needs work
  * coll1 - think good
- * coll2 - needs work
+ * coll2 - think good
  * findKey - not sure
  * printMap - given
  */
@@ -169,9 +169,7 @@ int hashMap::calcHash1(string k) {
 	//probably add a check if the string is odd or even
 }
 void hashMap::getClosestPrime() {
-	// confused how to start this one
-	// Understand what is being asked but don't know how to approach it
-	int primes []= {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137};
+	int primes [33]= {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137}; //add more primes later
 	int len = sizeof(primes)/sizeof(primes[0]); //high
 	int middle = (len)/2; //if it doesnt work just hard code a variable for the length and change that
 	int low = 0;
@@ -228,7 +226,18 @@ int hashMap::coll1(int h, int i, string k) {
 	return h;
 }
 int hashMap::coll2(int h, int i, string k) {
-	// double hashing
+	// double hashing , adding half the aski value % 13 , do i have to use i for iterating through index? or can i not since it's already used?
+	int len = k.length();
+	int hash = 0;
+	for (int j = 0; map[h%mapSize] != NULL && map[h%mapSize]->keyword != k; j++){
+		for(i= 0; i<len;i++){
+			hash = hash + int(k[i])/2;
+		}
+		hash = hash %13;
+		collisions++;
+	}
+	collisions--;
+	return hash;
 //	if (map[i] != k){ //need help on with the test for collision line
 //
 //		h = calcHash1(k) + calcHash2(k);
