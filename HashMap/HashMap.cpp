@@ -175,7 +175,7 @@ void hashMap::getClosestPrime() {
 	int low = 0;
 	int newMapSize = 2*mapSize;
 	for(int i = 0 ; i< len; i++){
-		if (newMapSize == primes[middle]){
+		if (newMapSize == primes[middle]){//never happens
 			mapSize = primes[middle];
 		}
 		else if (newMapSize > primes[middle]){
@@ -199,11 +199,22 @@ void hashMap::getClosestPrime() {
 	}
 }
 void hashMap::reHash() {
-	int prevsize=mapSize;
-	getClosestPrime();
-	//E's attempt
-	//clone = new hashNode*[mapSize]; how do i set a new map?
-//	for(int i=0;i<mapSize,i++){ //fill clone with NULLS
+	//make clone
+	//give clone the updated mapsize by running get closest primes
+	//iterate thru original map
+	//take those strings, call hashes on the strings again
+	//take outputs of the hashfunction and feed them to the new array , hash = calcHash1(string) , then make clone[hash] = string?
+
+
+
+
+
+//	int prevsize=mapSize;
+//	getClosestPrime();
+//	//E's attempt
+//	hashNode **clone;
+//	clone = new hashNode*[mapSize];//how do i set a new map?
+//	for(int i=0;i<mapSize;i++){ //fill clone with NULLS
 //		clone[i]=NULL;
 //	}
 //	numKeys = 0;
