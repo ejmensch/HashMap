@@ -199,22 +199,64 @@ void hashMap::getClosestPrime() {
 	}
 }
 void hashMap::reHash() {
-	int newMapSize=2*mapSize; // double array size
-	mapSize=newMapSize;
-	hashNode **flipmap=map;
-	for (int i=0;i<mapSize/2;i++){
-		if (flipmap[i]!=NULL) {
-			if (hashfn==true) { //update each node in the new map
-				int ind=calcHash1(flipmap[i]->keyword);
-				map[ind]=flipmap[i];
-			}
-			else { //update each node in the new map
-				int ind=calcHash2(flipmap[i]->keyword);
-				map[ind]=flipmap[i];
-			}
-		}
-	}
-	delete[] flipmap; // deletes previous map once the new map is filled
+	int prevsize=mapSize;
+	getClosestPrime();
+	//E's attempt
+	//clone = new hashNode*[mapSize]; how do i set a new map?
+//	for(int i=0;i<mapSize,i++){ //fill clone with NULLS
+//		clone[i]=NULL;
+//	}
+//	numKeys = 0;
+//	for(int j=0;j<prevsize;j++){
+//		if(map[j]!= NULL){
+//			int index=j;//get index of that
+//
+//		if(clone[index]==NULL){ //if empty, fill it
+//			clone[index]=map[j];
+//			numKeys++;
+//		}
+//		else if(clone[index]!=NULL){ //colision
+//			hashcoll++;
+//			if(collfn==true){//coll1
+//				if(hashfn==true){//hash1
+//
+//				}
+//				else{//hash2
+//
+//				}
+//
+//
+//				} else if (collfn == false) { //coll2
+//					if (hashfn == true) { //hash1
+//
+//					}
+//					else { //hash2
+//
+//					}
+//				}
+//				numKeys++;
+//			}
+//		}
+//	}
+//
+//	return;
+
+//	int newMapSize=2*mapSize; // double array size
+//	mapSize=newMapSize;
+//	hashNode **flipmap=map;
+//	for (int i=0;i<mapSize/2;i++){
+//		if (flipmap[i]!=NULL) {
+//			if (hashfn==true) { //update each node in the new map
+//				int ind=calcHash1(flipmap[i]->keyword);
+//				map[ind]=flipmap[i];
+//			}
+//			else { //update each node in the new map
+//				int ind=calcHash2(flipmap[i]->keyword);
+//				map[ind]=flipmap[i];
+//			}
+//		}
+//	}
+//	delete[] flipmap; // deletes previous map once the new map is filled
 }
 int hashMap::coll1(int h, int i, string k) {
 	//quadratic probing
