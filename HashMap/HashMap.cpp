@@ -6,19 +6,6 @@
 #include <math.h>
 using namespace std;
 
-/* Functions:
- * hashMap - think good
- * addKeyValue - think good, but still unsure
- * getIndex - think good
- * calcHash1 - think good
- * calcHash2 - think good
- * getClosestPrime - think done
- * reHash - needs work
- * coll1 - think good
- * coll2 - think good
- * findKey - not sure
- * printMap - given
- */
 
 hashMap::hashMap(bool hash1, bool coll1) {
 	first = "";
@@ -33,6 +20,21 @@ hashMap::hashMap(bool hash1, bool coll1) {
 	collisions = 0;
 	hashcoll = 0;
 	// all values in .hpp file are initialized
+	/*
+	first = "";
+	numKeys = 0;
+	mapSize = 100;
+	map = new hashNode*[mapSize];
+	for(int i = 0; i < mapSize; i++){
+		map[i] = NULL;
+	}
+	hashfn = hash1;
+	collfn = coll1;
+	collisions = 0;
+	hashcoll = 0;
+	//cout << "EXIT HASH" <<endl;
+	return;
+	*/
 }
 void hashMap::addKeyValue(string k, string v) {
 	int ind = getIndex(k);
@@ -93,13 +95,54 @@ void hashMap::addKeyValue(string k, string v) {
 		}
 	}
 
-	float load = numKeys/mapSize;
+	float load = (float)numKeys/(float)mapSize;
 	if (load>=0.7) {
 		reHash();
 	}
+	/*
+	int index = getIndex(k);
+	cout << k << " " ;
+	if(map[index]==NULL){
+		map[index]=new hashNode(k,v);
+		numKeys++;
+	}
+	else if(map[index]->keyword==k){
+		map[index]->addValue(v);
+	}
+	else if(map[index]->keyword!=k){
+		hashcoll++;
+		if(collfn==true){
+			if(hashfn==true){
+				index = coll1(calcHash1(k),getIndex(k),k);
+			}
+			else{
+				index = coll1(calcHash2(k),getIndex(k),k);
+			}
+		}
+		else{
+			if(hashfn==true){
+				index = coll2(calcHash1(k),getIndex(k),k);
+			}
+			else{
+				index = coll2(calcHash2(k),getIndex(k),k);
+			}
+		}
+		if(map[index]==NULL){
+			map[index]=new hashNode(k,v);
+			numKeys++;
+		}
+		else if(map[index]->keyword==k){
+			map[index]->addValue(v);
+		}
+	}
+	double load = (double)numKeys/double(mapSize);
+	if(load>=0.7){
+		reHash();}
+	return;
+	*/
 }
 int hashMap::getIndex(string k) {
-	float load = numKeys/mapSize;
+	float load = (float)numKeys/(float)mapSize;
 	if (load>=0.7) {
 		reHash();
 	}
@@ -114,6 +157,20 @@ int hashMap::getIndex(string k) {
 		ind = -1;
 	}
 	return ind;
+	/*
+	double load = (double)numKeys/double(mapSize);
+	if(load>=0.7){
+		reHash();
+	}
+	int index=-1;
+	if(hashfn==true){
+		index = (calcHash1(k))%mapSize;
+	}
+	else{
+		index = calcHash2(k)%mapSize;
+	}
+	return index;
+	*/
 }
 
 int hashMap::calcHash2(string k) {
@@ -175,7 +232,7 @@ void hashMap::getClosestPrime() {
 	int low = 0;
 	int newMapSize = 2*mapSize;
 	for(int i = 0 ; i< len; i++){
-		if (newMapSize == primes[middle]){//never happens
+		if (newMapSize == primes[middle]){
 			mapSize = primes[middle];
 		}
 		else if (newMapSize > primes[middle]){
@@ -197,78 +254,103 @@ void hashMap::getClosestPrime() {
 	else{
 		mapSize = primes[middle];
 	}
+	/*
+	int ogsize = mapSize*2;
+	if(ogsize == 0 || ogsize ==1 || ogsize==2){
+		mapSize=3;
+		return;
+	}
+	int up =ogsize-1;
+	bool upPrime=false;
+	while(upPrime==false){
+		up = up+1;
+		upPrime =true;
+		for(int i=2;i<up;i++){
+			if(up%i==0){
+				upPrime=false;
+				i = up;
+			}
+		}
+	}
+	int down =ogsize+1;
+	bool downPrime=false;
+	while(downPrime==false && down>2){
+		down = down-1;
+		downPrime =true;
+		for(int i=2;i<down;i++){
+			if(down%i==0){
+				downPrime=false;
+				i = down;
+			}
+		}
+
+	}
+	if(down==2){
+		mapSize=up;
+	}
+	else if((ogsize-down)<(up-ogsize)){
+		mapSize=down;
+	}
+	else{
+		mapSize=up;
+	}
+	return;
+	*/
 }
 void hashMap::reHash() {
-	//make clone
-	//give clone the updated mapsize by running get closest primes
-	//iterate thru original map
-	//take those strings, call hashes on the strings again
-	//take outputs of the hashfunction and feed them to the new array , hash = calcHash1(string) , then make clone[hash] = string?
+	numKeys = 0;
+	// make clone
+	hashNode *clone[mapSize];
+	for (int i = 0; i<mapSize;i++) {
+		clone[i]=map[i];
+	}
+	int prevsize = mapSize;
+	delete[]map;
+	// give clone the updated mapsize by running get closest primes
+	getClosestPrime();
+	map = new hashNode*[mapSize];
+	// iterate thru original map
+	// here's how you spell through since you didn't know Friday
+	for (int i = 0; i<mapSize; i++) {
+		map[i] = NULL;
+	}
+	for (int j = 0; j<prevsize; j++) {
+		if (clone[j] != NULL) {
+			int ind = getIndex(clone[j]->keyword);
+			// Process below follows a very similar process to addKeyValue
+			// Just not adding any more values, just the rehash on the keys
 
-
-
-
-
-//	int prevsize=mapSize;
-//	getClosestPrime();
-//	//E's attempt
-//	hashNode **clone;
-//	clone = new hashNode*[mapSize];//how do i set a new map?
-//	for(int i=0;i<mapSize;i++){ //fill clone with NULLS
-//		clone[i]=NULL;
-//	}
-//	numKeys = 0;
-//	for(int j=0;j<prevsize;j++){
-//		if(map[j]!= NULL){
-//			int index=j;//get index of that
-//
-//		if(clone[index]==NULL){ //if empty, fill it
-//			clone[index]=map[j];
-//			numKeys++;
-//		}
-//		else if(clone[index]!=NULL){ //colision
-//			hashcoll++;
-//			if(collfn==true){//coll1
-//				if(hashfn==true){//hash1
-//
-//				}
-//				else{//hash2
-//
-//				}
-//
-//
-//				} else if (collfn == false) { //coll2
-//					if (hashfn == true) { //hash1
-//
-//					}
-//					else { //hash2
-//
-//					}
-//				}
-//				numKeys++;
-//			}
-//		}
-//	}
-//
-//	return;
-
-//	int newMapSize=2*mapSize; // double array size
-//	mapSize=newMapSize;
-//	hashNode **flipmap=map;
-//	for (int i=0;i<mapSize/2;i++){
-//		if (flipmap[i]!=NULL) {
-//			if (hashfn==true) { //update each node in the new map
-//				int ind=calcHash1(flipmap[i]->keyword);
-//				map[ind]=flipmap[i];
-//			}
-//			else { //update each node in the new map
-//				int ind=calcHash2(flipmap[i]->keyword);
-//				map[ind]=flipmap[i];
-//			}
-//		}
-//	}
-//	delete[] flipmap; // deletes previous map once the new map is filled
+			// take those strings, call hashes on the strings again
+			if (map[ind]==NULL) {
+				map[ind]=clone[j];
+				numKeys++;
+			}
+			else if (map[ind]!=NULL) {
+				hashcoll++;
+				if (hashfn==true) {
+					if (collfn==true) {
+						ind = coll1(calcHash1(clone[j]->keyword),getIndex(clone[j]->keyword),clone[j]->keyword);
+					}
+					else {
+						ind = coll1(calcHash1(clone[j]->keyword),getIndex(clone[j]->keyword),clone[j]->keyword);
+					}
+				}
+				else {
+					if (collfn==true) {
+						ind = coll1(calcHash1(clone[j]->keyword),getIndex(clone[j]->keyword),clone[j]->keyword);
+					}
+					else {
+						coll1(calcHash1(clone[j]->keyword),getIndex(clone[j]->keyword),clone[j]->keyword);
+					}
+				}
+				// take outputs of the hash function and feed them to the new array
+				map[ind]=clone[j];
+				numKeys++;
+			}
+		}
+	}
 }
+
 int hashMap::coll1(int h, int i, string k) {
 	//quadratic probing
 	for (int j = 0; map[h%mapSize] != NULL && map[h%mapSize]->keyword != k; j++) {
@@ -280,6 +362,7 @@ int hashMap::coll1(int h, int i, string k) {
 }
 int hashMap::coll2(int h, int i, string k) {
 	// double hashing , adding half the aski value % 13 , do i have to use i for iterating through index? or can i not since it's already used?
+
 	int len = k.length();
 	int hash = 0;
 	for (int j = 0; map[h%mapSize] != NULL && map[h%mapSize]->keyword != k; j++){
@@ -291,14 +374,8 @@ int hashMap::coll2(int h, int i, string k) {
 	}
 	collisions--;
 	return hash;
-//	if (map[i] != k){ //need help on with the test for collision line
-//
-//		h = calcHash1(k) + calcHash2(k);
-//	}
-//  this needs some work
 }
 int hashMap::findKey(string k) {
-//NOTE: THIS METHOD CANNOT LOOP from index 0 to end of hash array looking for the key.  That destroys any efficiency in run-time.
 	int ind = getIndex(k);
 	if (hashfn==true) {
 		ind = calcHash1(k);
@@ -327,7 +404,7 @@ int hashMap::findKey(string k) {
 			return -1;
 		}
 	}
-	if (hashfn==false) {
+	else {
 		ind = calcHash2(k);
 		if (map[ind]->keyword==k) {
 			return ind;
@@ -354,7 +431,6 @@ int hashMap::findKey(string k) {
 			return -1;
 		}
 	}
-	return -1;
 }
 
 
