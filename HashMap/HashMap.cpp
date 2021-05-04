@@ -20,23 +20,10 @@ hashMap::hashMap(bool hash1, bool coll1) {
 	collisions = 0;
 	hashcoll = 0;
 	// all values in .hpp file are initialized
-	/*
-	first = "";
-	numKeys = 0;
-	mapSize = 100;
-	map = new hashNode*[mapSize];
-	for(int i = 0; i < mapSize; i++){
-		map[i] = NULL;
-	}
-	hashfn = hash1;
-	collfn = coll1;
-	collisions = 0;
-	hashcoll = 0;
-	//cout << "EXIT HASH" <<endl;
-	return;
-	*/
+
 }
 void hashMap::addKeyValue(string k, string v) {
+	//cout << "addKeyValue(): " << k << endl;
 	int ind = getIndex(k);
 	cout << k << " ";
 	if (map[ind]==NULL) { //adds a node at each null value
@@ -99,47 +86,7 @@ void hashMap::addKeyValue(string k, string v) {
 	if (load>=0.7) {
 		reHash();
 	}
-	/*
-	int index = getIndex(k);
-	cout << k << " " ;
-	if(map[index]==NULL){
-		map[index]=new hashNode(k,v);
-		numKeys++;
-	}
-	else if(map[index]->keyword==k){
-		map[index]->addValue(v);
-	}
-	else if(map[index]->keyword!=k){
-		hashcoll++;
-		if(collfn==true){
-			if(hashfn==true){
-				index = coll1(calcHash1(k),getIndex(k),k);
-			}
-			else{
-				index = coll1(calcHash2(k),getIndex(k),k);
-			}
-		}
-		else{
-			if(hashfn==true){
-				index = coll2(calcHash1(k),getIndex(k),k);
-			}
-			else{
-				index = coll2(calcHash2(k),getIndex(k),k);
-			}
-		}
-		if(map[index]==NULL){
-			map[index]=new hashNode(k,v);
-			numKeys++;
-		}
-		else if(map[index]->keyword==k){
-			map[index]->addValue(v);
-		}
-	}
-	double load = (double)numKeys/double(mapSize);
-	if(load>=0.7){
-		reHash();}
-	return;
-	*/
+
 }
 int hashMap::getIndex(string k) {
 	float load = (float)numKeys/(float)mapSize;
@@ -157,25 +104,12 @@ int hashMap::getIndex(string k) {
 		ind = -1;
 	}
 	return ind;
-	/*
-	double load = (double)numKeys/double(mapSize);
-	if(load>=0.7){
-		reHash();
-	}
-	int index=-1;
-	if(hashfn==true){
-		index = (calcHash1(k))%mapSize;
-	}
-	else{
-		index = calcHash2(k)%mapSize;
-	}
-	return index;
-	*/
+
 }
 
 int hashMap::calcHash2(string k) {
 	//rolling hash
-	//https://cp-algorithms.com/string/string-hashing.html
+
 	int len = k.length();
 	unsigned long int hash = 0;
 	int p = 53;
@@ -192,43 +126,21 @@ int hashMap::calcHash1(string k) {
 	unsigned long int hash = 0;
 	if(len%2 == 0){   //even
 		for(int i=0; i<len;i++){
-			//hash = ((int)k[i] + 11*hash) % len; //instead of len here we need the array size of the data so mapSize? Bryce can you ask about this tomorrow?
 			hash = ((int)k[i] + 11*hash) % mapSize;
 		}
 	}
-	else {
+	else {//odd
 		for (int i = 0; i < len; i++) {
-			//hash = ((int)k[i] + 37 * hash) % len;
 			hash = ((int)k[i] + 37 * hash) % mapSize;
 		}
 	}
 	return hash;
 
-//this was an attemp to do every other letter, might come back to it later
-//	int len = k.length();
-//	unsigned long int hsh = 0;
-//	int i;
-//	if (len<4){
-//		for( i = 0; i< len ; i++){
-//			hsh = ((int)k[i] + 7*hsh) % len;
-//		}
-//	}
-//	else if(len%2 == 0){
-//		for(i)
-//	}
-//	else {
-//		for (i = 0; i < len - 1; i += 2) {
-//			hsh = ((int) k[i] + hsh) % len;
-//		}
-//	}
-//	return hsh;
-	//maybe done?
-	//probably add a check if the string is odd or even
 }
 void hashMap::getClosestPrime() {
-	int primes [169]= {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809,811,821,823,827,829,839,853,857,863,877,881,883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997}; //add more primes later
+	int primes [175]= {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773,787,797,809,811,821,823,827,829,839,853,857,863,877,881,883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997,1001}; //add more primes later
 	int len = sizeof(primes)/sizeof(primes[0]); //high
-	int middle = (len)/2; //if it doesnt work just hard code a variable for the length and change that
+	int middle = (len)/2;
 	int low = 0;
 	int newMapSize = 2*mapSize;
 	for(int i = 0 ; i< len; i++){
@@ -254,48 +166,7 @@ void hashMap::getClosestPrime() {
 	else{
 		mapSize = primes[middle];
 	}
-	/*
-	int ogsize = mapSize*2;
-	if(ogsize == 0 || ogsize ==1 || ogsize==2){
-		mapSize=3;
-		return;
-	}
-	int up =ogsize-1;
-	bool upPrime=false;
-	while(upPrime==false){
-		up = up+1;
-		upPrime =true;
-		for(int i=2;i<up;i++){
-			if(up%i==0){
-				upPrime=false;
-				i = up;
-			}
-		}
-	}
-	int down =ogsize+1;
-	bool downPrime=false;
-	while(downPrime==false && down>2){
-		down = down-1;
-		downPrime =true;
-		for(int i=2;i<down;i++){
-			if(down%i==0){
-				downPrime=false;
-				i = down;
-			}
-		}
 
-	}
-	if(down==2){
-		mapSize=up;
-	}
-	else if((ogsize-down)<(up-ogsize)){
-		mapSize=down;
-	}
-	else{
-		mapSize=up;
-	}
-	return;
-	*/
 }
 void hashMap::reHash() {
 	numKeys = 0;
@@ -361,19 +232,19 @@ int hashMap::coll1(int h, int i, string k) {
 	return h;
 }
 int hashMap::coll2(int h, int i, string k) {
-	// double hashing , adding half the aski value % 13 , do i have to use i for iterating through index? or can i not since it's already used?
+	// double hashing , adding half the aski value, do i have to use i for iterating through index? or can i not since it's already used?
 
 	int len = k.length();
-	int hash = 0;
+	//int h = 0;
 	for (int j = 0; map[h%mapSize] != NULL && map[h%mapSize]->keyword != k; j++){
 		for(i= 0; i<len;i++){
-			hash = hash + int(k[i])/2;
+			h = h + int(k[i])/2;
 		}
-		hash = hash %13;
+		//h = h %13;
 		collisions++;
 	}
 	collisions--;
-	return hash;
+	return h%mapSize;
 }
 int hashMap::findKey(string k) {
 	int ind = getIndex(k);

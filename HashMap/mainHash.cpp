@@ -11,6 +11,7 @@ int main() {
 	makeSeuss voice2("DrSeuss.txt","Seussout2.txt",false,true);
 	makeSeuss voice3("DrSeuss.txt","Seussout3.txt",true,false);
 	makeSeuss voice4("DrSeuss.txt","Seussout4.txt",false,false);
+	cout << "done with makeSeuss4" << endl;
 //OR
 //	makeSeuss voice5("GEChap1a.txt","GEout1.txt",true,true);
 //	makeSeuss voice6("GEChap1a.txt","GEout2.txt",false,true);
